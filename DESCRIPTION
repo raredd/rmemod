@@ -1,0 +1,19 @@
+Package: rmemod
+Type: Package
+Title: rmemod
+Version: 0.0.0.9000
+Authors@R: person("Robert", "Redd", email = "raredd01@gmail.com",
+  role = c("aut", "cre"))
+Author: Robert Redd
+Maintainer: Robert Redd <raredd01@gmail.com>
+Description: Patterns of recurrence and mutual exclusivity to identify
+  functional modules in tumors.
+Suggests:
+    knitr,
+    testthat
+License: file LICENSE
+LazyData: yes
+URL: https://github.com/raredd/rmemod
+VignetteBuilder: knitr
+RoxygenNote: 7.1.1
+Encoding: UTF-8
