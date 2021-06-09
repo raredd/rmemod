@@ -1,7 +1,7 @@
 Package: rmemod
 Type: Package
 Title: rmemod
-Version: 0.0.0.9000
+Version: 0.0.0.9001
 Authors@R: person("Robert", "Redd", email = "raredd01@gmail.com",
   role = c("aut", "cre"))
 Author: Robert Redd
@@ -11,7 +11,7 @@ Description: Patterns of recurrence and mutual exclusivity to identify
 Suggests:
     knitr,
     testthat
-License: file LICENSE
+License: MIT + file LICENSE
 LazyData: yes
 URL: https://github.com/raredd/rmemod
 VignetteBuilder: knitr
