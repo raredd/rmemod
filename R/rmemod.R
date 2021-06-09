@@ -167,7 +167,8 @@ rmemod <- function(x, modsize = 2L, ngenes = nrow(x), bgrate = 0.01037848,
   
   path <- system.file('scripts', 'run.sh', package = 'rmemod')
   args <- list(
-    s = modsize, i = input, g = ngenes, o = output1, p = output2,
+    s = modsize, i = input, g = ngenes,
+    o = basename(output1), p = basename(output2), d = outdir,
     b = bgrate, w = winnow, m = minfreq, t = threshold
   )
   

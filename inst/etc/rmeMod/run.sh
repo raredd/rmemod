@@ -11,6 +11,7 @@ function usage
     echo "  -s | --maxModSize  max module size (required)"
     echo "  -i | --infile      input matrix (required)"
     echo "  -g | --genes       total number of genes assayed (required)"
+    echo "  -d | --outdir      output directory"
     echo "  -o | --outFile1    list of potential modules"
     echo "  -p | --outfile2    best modules (chosen by pickModules)"
     echo "  -b | --bgrate      background mutation rate (optional - default 13.0)"
@@ -43,6 +44,9 @@ while [[ "$1" != "" ]]; do
 				;;
         -m | --minFreq )        shift
                                 minFreq=$1
+				;;
+        -d | --outdir )         shift
+                                outdir=$1
 				;;
         -o | --outfile1 )       shift
                                 outfile1=$1
@@ -132,19 +136,19 @@ fi
 
 
 # run winnow to generate exclusivity scores
-ruby $wModDir/xorWinnow.rb $infile $minFreq $winThresh >network.dat
+ruby $wModDir/xorWinnow.rb $infile $minFreq $winThresh >$outdir/network.dat
 
 
 #search the network for RME modules
 if [[ "$verbose" != "false" ]];then
   echo "Searching the Network..."
-  ruby $wModDir/depthOneSearch.rb $infile network.dat 2 $maxModSize $genes $minFreq $bgrate | sort -nrk 1 >$outfile1
+  ruby $wModDir/depthOneSearch.rb $infile $outdir/network.dat 2 $maxModSize $genes $minFreq $bgrate | sort -nrk 1 >$outdir/$outfile1
 else
-  ruby $wModDir/depthOneSearch.rb $infile network.dat 2 $maxModSize $genes $minFreq $bgrate false | sort -nrk 1 >$outfile1
+  ruby $wModDir/depthOneSearch.rb $infile $outdir/network.dat 2 $maxModSize $genes $minFreq $bgrate false | sort -nrk 1 >$outdir/$outfile1
 fi
 
 
 #filter the potential modules and keep the largest, best scoring ones
-ruby $wModDir/pickModules.rb $outfile1 $infile $sigThresh >$outfile2
+ruby $wModDir/pickModules.rb $outdir/$outfile1 $infile $sigThresh >$outdir/$outfile2
 
 
