@@ -1,8 +1,5 @@
 .onAttach <- function(libname, pkgname) {
-  if (system('which bash', intern = TRUE) == '')
-    packageStartupMessage('bash is required -- please install')
-  
-  if (system('which ruby', intern = TRUE) == '')
+  if (system2('which', 'ruby', stdout = FALSE))
     packageStartupMessage('ruby is required -- please install')
   
   invisible(NULL)
