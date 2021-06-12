@@ -11,7 +11,7 @@ rmemod(
   modsize = 2L,
   ngenes = nrow(x),
   bgrate = 0.01037848,
-  winnow = 4,
+  winnow = 4L,
   minfreq = 0.1,
   threshold = 50,
   verbose = FALSE,

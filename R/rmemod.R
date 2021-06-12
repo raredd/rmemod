@@ -128,51 +128,56 @@
 #' @export
 
 rmemod <- function(x, modsize = 2L, ngenes = nrow(x), bgrate = 0.01037848,
-                   winnow = 4, minfreq = 0.1, threshold = 50,
+                   winnow = 4L, minfreq = 0.1, threshold = 50,
                    verbose = FALSE, outdir = NULL, timeout = 30) {
   x <- as.matrix(x)
   if (is.null(colnames(x)))
-    colnames(x) <- sprintf('sample%s', seq.int(ncol(x)))
+    colnames(x) <- sprintf('col%s', seq.int(ncol(x)))
   if (is.null(rownames(x)))
-    rownames(x) <- sprintf('gene%s', seq.int(nrow(x)))
+    rownames(x) <- sprintf('row%s', seq.int(nrow(x)))
   
-  winnow <- 2 ^ floor(log2(winnow))
+  ngenes <- as.integer(ngenes)
+  modsize <- as.integer(modsize)
+  winnow <- as.integer(2 ^ floor(log2(winnow)))
   
   outdir <- if (!is.null(outdir)) {
     dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
     outdir
   } else tempdir()
-  input <- tempfile('input-', outdir)
   
+  input   <- tempfile('input-', outdir)
   output1 <- tempfile('potentialModules-', outdir)
   output2 <- tempfile('topModules-', outdir)
   
   stopifnot(
     all(c(x) %in% 0:1),
     ngenes >= nrow(x),
-    # modsize <= 5,
+    modsize >= 2L,
+    # modsize <= 5L,
+    winnow >= 4L,
     minfreq >= 0, minfreq < 1,
     bgrate >= 0, bgrate < 1,
     timeout >= 0
   )
   
-  if (modsize > 5)
+  if (modsize > 5L) {
     warning(
       'complexity may be high and take some time - ',
-      'may need to increase value of \'timeout\' arg'
+      'may need to increase value of \'timeout\' argument'
     )
+  }
   
   colnames(x)[1L] <- sprintf('\t%s', colnames(x)[1L])
   write.table(x, file = input, quote = FALSE, sep = '\t')
   
   path <- system.file('scripts', 'run.sh', package = 'rmemod')
   args <- list(
-    s = modsize, i = input, g = ngenes,
-    o = basename(output1), p = basename(output2), d = outdir,
-    b = bgrate, w = winnow, m = minfreq, t = threshold
+    infile = input, genes = ngenes, maxModSize = modsize, outdir = outdir,
+    outfile1 = basename(output1), outfile2 = basename(output2),
+    bgrate = bgrate, threshold = winnow, minFreq = minfreq, sigThresh = threshold
   )
   
-  call <- paste(sprintf('-%s %s', names(args), args), collapse = ' ')
+  call <- paste(sprintf('--%s %s', names(args), args), collapse = ' ')
   verb <- if (verbose)
     '' else TRUE
   
@@ -198,8 +203,7 @@ rmemod <- function(x, modsize = 2L, ngenes = nrow(x), bgrate = 0.01037848,
   
   ## top modules
   tmod <- tryCatch({
-    tmod <- read.table(output2, header = FALSE)
-    names(tmod) <- c('d', 'coverage', 'exclusivity', 'module')
+    tmod <- setNames(read.table(output2, header = FALSE), names(null))
     tmod$p.value <- 2 ^ -tmod$d
     tmod
   }, warning = function(w) null[0L, ], error = function(e) null[0L, ])
