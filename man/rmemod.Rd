@@ -29,7 +29,7 @@ rmemod(
 plot methods}
 
 \item{modsize}{the largest module that the algorithm will attempt to find,
-i.e., potential modules will be between 2 and \code{modsize} genes
+i.e., potential modules will include between 2 and \code{modsize} genes
 
 warning: the algorithm's complexity grows very quickly as a result of
 using combinatorial search, e.g., values over 5 applied to very large

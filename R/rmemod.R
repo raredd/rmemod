@@ -20,7 +20,7 @@
 #'   \code{p} samples or an object returned by \code{rmemod} for print and
 #'   plot methods
 #' @param modsize the largest module that the algorithm will attempt to find,
-#'   i.e., potential modules will be between 2 and \code{modsize} genes
+#'   i.e., potential modules will include between 2 and \code{modsize} genes
 #'   
 #'   warning: the algorithm's complexity grows very quickly as a result of
 #'   using combinatorial search, e.g., values over 5 applied to very large
@@ -72,7 +72,6 @@
 #'   results will be returned
 #' @param ... additional arguments passed to or from other methods
 #' 
-#' @importFrom graphics legend par text
 #' @importFrom stats quantile setNames
 #' 
 #' @seealso
@@ -131,6 +130,7 @@ rmemod <- function(x, modsize = 2L, ngenes = nrow(x), bgrate = 0.01037848,
                    winnow = 4L, minfreq = 0.1, threshold = 50,
                    verbose = FALSE, outdir = NULL, timeout = 30) {
   x <- as.matrix(x)
+  
   if (is.null(colnames(x)))
     colnames(x) <- sprintf('col%s', seq.int(ncol(x)))
   if (is.null(rownames(x)))
@@ -221,6 +221,7 @@ print.rmemod <- function(x, ...) {
   invisible(x)
 }
 
+#' @importFrom graphics legend par text
 #' @rdname rmemod
 #' @export
 plot.rmemod <- function(x, ...) {
