@@ -136,6 +136,7 @@ r
 
 ## potential modules
 head(r$pot)
+
 ## significance
 head(2 ^ -r$pot$d)
 

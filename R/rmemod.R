@@ -118,6 +118,7 @@
 #' 
 #' ## potential modules
 #' head(r$pot)
+#' 
 #' ## significance
 #' head(2 ^ -r$pot$d)
 #' 
@@ -238,17 +239,20 @@ plot.rmemod <- function(x, ...) {
   op <- par(las = 1L, mar = c(5, 5, 5, 2) + 0.1, xpd = NA, bty = 'l')
   on.exit(par(op))
   
+  xt <- x$top
+  
   plot(
-    x$top$coverage, x$top$exclusivity, ...,
-    cex = rescaler(-log10(x$top$p.value), c(1, 3)),
-    xlab = 'coverage', ylab = 'exclusivity',
-  )
-  text(x$top$coverage, x$top$exclusivity, x$top$module, pos = 3L, cex = 0.75)
-  leg <- quantile(x$top$p.value, c(1, 0.5, 0))
-  legend(
-    'top', title = expression(p-value~(2^-d)), bty = 'n', col = 1L, pch = 1L,
-    xpd = NA, inset = c(0, -0.15), horiz = TRUE,
-    legend = format(leg, digits = 3L), pt.cex = rescaler(leg, c(3, 1))
+    xt$coverage, xt$exclusivity, cex = rescaler(-log10(xt$p.value), c(1, 3)),
+    xlab = 'coverage', ylab = 'exclusivity', ...,
+    panel.last = {
+      text(xt$coverage, xt$exclusivity, xt$module, pos = 3L, cex = 0.75)
+      leg <- quantile(xt$p.value, c(1, 0.5, 0))
+      legend(
+        'top', title = expression(p-value~(2^-d)), bty = 'n', xpd = NA,
+        col = 1L, pch = 1L, inset = c(0, -0.15), horiz = TRUE,
+        legend = format(leg, digits = 3L), pt.cex = rescaler(leg, c(3, 1))
+      )
+    }
   )
   
   invisible(x)
